@@ -12,6 +12,7 @@ import DateFnsUtils from '@date-io/date-fns';
 const App = () => {
     const [data, setData] = useState([]);
     const [isAuthorized, setIsAuthorized] = useState(null);
+    const [user, setUser] = useState({});
     const [isAmin, setIsAdmin] = useState(null);
     const [signUp, setSignUp] = useState(false);
     // useEffect(() => {
@@ -48,20 +49,23 @@ const App = () => {
         })
     }, [])
 
-        useEffect(() => {
-            fetch("api/me", {headers: {'Authorization': "Bearer " + cookie.get('token')}}
-            ).then(response => {
-                if (response.status > 400)
-                    console.log(response.status)
-                return response.json()
-            }).then(data=>
+    useEffect(() => {
+        fetch("api/me", {headers: {'Authorization': "Bearer " + cookie.get('token')}}
+        ).then(response => {
+            if (response.status > 400)
+                console.log(response.status)
+            return response.json()
+        }).then(data => {
                 setIsAdmin(data.is_admin)
-            )
-        },[isAuthorized])
+                setUser(data)
+            }
+        )
+    }, [isAuthorized])
 
     if (isAuthorized != null)
         if (isAuthorized)
-            return <MuiPickersUtilsProvider utils={DateFnsUtils}><UserComplaints isAdmin={isAmin}/></MuiPickersUtilsProvider>
+            return <MuiPickersUtilsProvider utils={DateFnsUtils}><UserComplaints isAdmin={isAmin}
+                                                                                 user={user}/></MuiPickersUtilsProvider>
         else if (signUp)
             return <SignUp setIsAuthorized={setIsAuthorized}/>
         else

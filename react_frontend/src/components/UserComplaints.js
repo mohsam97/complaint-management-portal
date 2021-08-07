@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import cookie from 'js-cookie';
 import {
-    FormControl,
+    FormControl, Grid,
     IconButton,
     InputLabel,
     MenuItem,
@@ -14,14 +14,14 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
+    TableRow, Typography
 } from "@material-ui/core";
 import {DatePicker,} from '@material-ui/pickers';
 import AddIcon from '@material-ui/icons/Add';
 import {format} from 'date-fns'
 
 const UserComplaints = (props) => {
-    const {isAdmin} = props
+    const {isAdmin, user} = props
     const [data, setData] = useState([]);
     const [create, setCreate] = useState(false);
     const [description, setDescription] = useState("");
@@ -85,16 +85,46 @@ const UserComplaints = (props) => {
         cookie.remove("token");
         location.reload();
     }
-
-
-    return (<>
-            <Button onClick={onClickSignOut}>sign out</Button>
-            <TableContainer component={Paper}>
-                {!isAdmin ?
-                    <IconButton onClick={() => !create ? setCreate(true) : onClickCreate()}>
-                        <AddIcon/>
-                    </IconButton> : null}
-                <Table>
+    return (
+        <div style={{marginLeft: "15%", marginRight: "15%" , padding:5}}>
+            <Grid container justifyContent={"space-between"} style={{marginBottom:10}}>
+                <Grid item xs={6}>
+                    <Typography variant={"h5"}>
+                        {user.first_name} {user.last_name}
+                    </Typography>
+                </Grid>
+                <Grid item xs={1}>
+                    <Button
+                        onClick={onClickSignOut}
+                        variant="contained"
+                        fullWidth
+                        color="primary">
+                        sign out
+                    </Button>
+                </Grid>
+            </Grid>
+            <Paper>
+                <Grid container justifyContent={"space-between"} style={{padding: 10}}>
+                    <Grid item xs={2}>
+                        <Typography component="h1" variant="h5">Complaints</Typography>
+                    </Grid>
+                    {!isAdmin ?
+                        <Grid item xs={1}>
+                            {create ?
+                                <Button
+                                    onClick={onClickCreate}
+                                    variant="contained"
+                                    color="primary">
+                                    Add
+                                </Button> :
+                                <IconButton
+                                    onClick={() => setCreate(true)}>
+                                    <AddIcon/>
+                                </IconButton>
+                            }
+                        </Grid> : null}
+                </Grid>
+                <Table size="small">
                     <TableHead>
                         {create ?
                             <TableRow key={"create"}>
@@ -104,6 +134,7 @@ const UserComplaints = (props) => {
                                         onChange={(e) => setDescription(e.target.value)}
                                         value={description}
                                         fullWidth
+                                        autoFocus
                                     />
                                 </TableCell>
                                 <TableCell component="th" scope="row">
@@ -169,8 +200,8 @@ const UserComplaints = (props) => {
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer>
-        </>
+            </Paper>
+        </div>
     )
 };
 export default UserComplaints;
