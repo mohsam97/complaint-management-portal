@@ -36,7 +36,7 @@ const SignIn = (props) => {
                         alignItems: 'center',
                     }}>
                     < Typography component="h1" variant="h5">
-                        Sign in
+                        Sign In
                     </Typography>
                     <form style={{width: "100%", marginTop: 1}} noValidate>
                         <TextField
@@ -47,9 +47,9 @@ const SignIn = (props) => {
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
+                            label="Username"
+                            name="username"
+                            autoComplete="username"
                             autoFocus
                         />
                         <TextField
