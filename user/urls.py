@@ -20,7 +20,7 @@ from rest_framework import routers
 
 # Serializers define the API representation.
 from user.models import User
-from user.views import UserListCreate, TestListCreate, UserViewSet, user_creation
+from user.views import UserListCreate, TestListCreate, UserViewSet, user_creation, me
 
 
 # ViewSets define the view behavior.
@@ -35,4 +35,5 @@ urlpatterns = [
     path('test/api', TestListCreate.as_view()),
     path('favicon.ico', TestListCreate.as_view()),
     path('api/createuser', user_creation),
+    path('api/me', me),
 ]

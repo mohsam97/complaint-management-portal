@@ -22,6 +22,15 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
+@api_view(['GET'])
+def me(request):
+    if request.method == 'GET':
+        if not request.user.is_anonymous:
+            serializer = UserSerializer(request.user, many=False)
+            return Response(serializer.data)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
 @api_view(['POST'])
 def user_creation(request):
     if request.method == 'POST':

@@ -12,6 +12,7 @@ import DateFnsUtils from '@date-io/date-fns';
 const App = () => {
     const [data, setData] = useState([]);
     const [isAuthorized, setIsAuthorized] = useState(null);
+    const [isAmin, setIsAdmin] = useState(null);
     const [signUp, setSignUp] = useState(false);
     // useEffect(() => {
     //     fetch("users/api", {
@@ -45,12 +46,22 @@ const App = () => {
             else
                 setIsAuthorized(false)
         })
-
     }, [])
+
+        useEffect(() => {
+            fetch("api/me", {headers: {'Authorization': "Bearer " + cookie.get('token')}}
+            ).then(response => {
+                if (response.status > 400)
+                    console.log(response.status)
+                return response.json()
+            }).then(data=>
+                setIsAdmin(data.is_admin)
+            )
+        },[isAuthorized])
 
     if (isAuthorized != null)
         if (isAuthorized)
-            return <MuiPickersUtilsProvider utils={DateFnsUtils}><UserComplaints/></MuiPickersUtilsProvider>
+            return <MuiPickersUtilsProvider utils={DateFnsUtils}><UserComplaints isAdmin={isAmin}/></MuiPickersUtilsProvider>
         else if (signUp)
             return <SignUp setIsAuthorized={setIsAuthorized}/>
         else

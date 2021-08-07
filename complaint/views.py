@@ -11,18 +11,18 @@ from rest_framework.response import Response
 def user_complaints(request):
     if request.method == 'GET':
         if not request.user.is_anonymous:
-            complaints = Complaint.objects.filter(complained_by=request.user)
+            if request.user.is_admin:
+                complaints = Complaint.objects.all()
+            else:
+                complaints = Complaint.objects.filter(complained_by=request.user)
             serializer = ComplaintSerializer(complaints, many=True)
-        else:
-            complaints = Complaint.objects.all()
-            serializer = ComplaintSerializer(complaints, many=True)
-        return Response(serializer.data)
+            return Response(serializer.data)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
 def complaint_creation(request):
     if request.method == 'POST':
-        print(request.user)
         if not request.user.is_anonymous:
             complaint = Complaint(complained_by=request.user)
             request.data["complained_by"] = request.user.id
@@ -31,10 +31,20 @@ def complaint_creation(request):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            from user.models import User
-            complaint = Complaint(complained_by=User.objects.first())
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT'])
+def complaint_update_status(request, id):
+    if request.method == 'PUT':
+        if not request.user.is_anonymous:
+            complaint = Complaint.objects.get(id=id)
+            request.data["date"] = complaint.date
+            request.data["description"] = complaint.description
             serializer = ComplaintSerializer(complaint, data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)

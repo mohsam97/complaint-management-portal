@@ -4,9 +4,11 @@ import Button from '@material-ui/core/Button';
 import cookie from 'js-cookie';
 import {
     FormControl,
-    Icon,
-    IconButton, InputLabel, MenuItem,
-    Paper, Select,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
     Table,
     TableBody,
     TableCell,
@@ -14,14 +16,12 @@ import {
     TableHead,
     TableRow
 } from "@material-ui/core";
-import {
-    DatePicker,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
+import {DatePicker,} from '@material-ui/pickers';
 import AddIcon from '@material-ui/icons/Add';
 import {format} from 'date-fns'
 
 const UserComplaints = (props) => {
+    const {isAdmin} = props
     const [data, setData] = useState([]);
     const [create, setCreate] = useState(false);
     const [description, setDescription] = useState("");
@@ -30,7 +30,7 @@ const UserComplaints = (props) => {
     useEffect(() => {
         const requestOptions = {
             method: 'GET',
-            headers: {'Authorization': "Bearer " +  cookie.get('token')}
+            headers: {'Authorization': "Bearer " + cookie.get('token')}
         };
         fetch("api/complaints", requestOptions).then(response => {
             if (response.status > 400) {
@@ -46,7 +46,6 @@ const UserComplaints = (props) => {
     }, [])
 
     function onClickCreate() {
-        console.log(cookie.get('token'))
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'Authorization': "Bearer " + cookie.get('token')},
@@ -58,16 +57,43 @@ const UserComplaints = (props) => {
                     return {placeholder: "something went wrong!"};
                 });
             }
-            return response.json()
+            return response.json();
         }).then(data => {
             location.reload();
         });
     }
 
+    function onChangeStatus(id, status) {
+        const requestOptions = {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json', 'Authorization': "Bearer " + cookie.get('token')},
+            body: JSON.stringify({status: status})
+        };
+        fetch("api/updatecomplaint/" + id, requestOptions).then(response => {
+            if (response.status > 400) {
+                return this.setState(() => {
+                    return {placeholder: "something went wrong!"};
+                });
+            }
+            return response.json();
+        }).then(data => {
+            location.reload();
+        });
+    }
+
+    function onClickSignOut() {
+        cookie.remove("token");
+        location.reload();
+    }
+
 
     return (<>
+            <Button onClick={onClickSignOut}>sign out</Button>
             <TableContainer component={Paper}>
-                <IconButton onClick={() => !create ? setCreate(true) : onClickCreate()}><AddIcon/></IconButton>
+                {!isAdmin ?
+                    <IconButton onClick={() => !create ? setCreate(true) : onClickCreate()}>
+                        <AddIcon/>
+                    </IconButton> : null}
                 <Table>
                     <TableHead>
                         {create ?
@@ -112,6 +138,8 @@ const UserComplaints = (props) => {
                             <TableCell>Description</TableCell>
                             <TableCell>Date</TableCell>
                             <TableCell>Status</TableCell>
+                            {isAdmin ? <TableCell>Complained By</TableCell> : null}
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -119,7 +147,24 @@ const UserComplaints = (props) => {
                             <TableRow key={item.id}>
                                 <TableCell component="th" scope="row">{item.description}</TableCell>
                                 <TableCell component="th" scope="row">{item.date}</TableCell>
-                                <TableCell component="th" scope="row">{item.status}</TableCell>
+                                <TableCell component="th" scope="row">
+                                    <FormControl>
+                                        <InputLabel>Status</InputLabel>
+                                        <Select
+                                            disabled={!isAdmin}
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={item.status}
+                                            onChange={e => onChangeStatus(item.id, e.target.value)}
+                                        >
+                                            <MenuItem value={"p"}>Pending</MenuItem>
+                                            <MenuItem value={"r"}>Resolved</MenuItem>
+                                            <MenuItem value={"d"}>Dismissed</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </TableCell>
+                                {isAdmin ?
+                                    <TableCell component="th" scope="row">{item.complained_by}</TableCell> : null}
                             </TableRow>
                         ))}
                     </TableBody>
