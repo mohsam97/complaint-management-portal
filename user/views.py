@@ -22,14 +22,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-@api_view(['GET'])
-def post_collection(request, id):
-    if request.method == 'GET':
-        user = User.objects.get(id=id)
-        serializer = UserSerializer(user, many=False)
-        return Response(serializer.data)
-
-
 @api_view(['POST'])
 def user_creation(request):
     if request.method == 'POST':

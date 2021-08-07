@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user',
-    'rest_framework',
+    'complaint',
     'react_frontend',
+    'rest_framework',
     'rest_framework_simplejwt',
 ]
 
