@@ -9,6 +9,9 @@ from rest_framework.response import Response
 
 @api_view(['GET'])
 def user_complaints(request):
+    """
+    Returns complaints for the user that is logged in
+    """
     if request.method == 'GET':
         if not request.user.is_anonymous:
             if request.user.is_admin:
@@ -22,6 +25,9 @@ def user_complaints(request):
 
 @api_view(['POST'])
 def complaint_creation(request):
+    """
+    Create a new complaint for the user that is logged in
+    """
     if request.method == 'POST':
         if not request.user.is_anonymous:
             complaint = Complaint(complained_by=request.user)
@@ -37,6 +43,9 @@ def complaint_creation(request):
 
 @api_view(['PUT'])
 def complaint_update_status(request, id):
+    """
+    Updates complaint status
+    """
     if request.method == 'PUT':
         if not request.user.is_anonymous:
             complaint = Complaint.objects.get(id=id)

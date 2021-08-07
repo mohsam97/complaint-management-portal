@@ -6,6 +6,7 @@ import {Checkbox, Container, FormControlLabel, Grid, Typography} from "@material
 
 
 const SignUp = (props) => {
+    // A sign up page
     const {setIsAuthorized} = props
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");

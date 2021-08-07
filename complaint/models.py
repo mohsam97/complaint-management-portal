@@ -11,6 +11,15 @@ class ComplaintStatuses(object):
 
 
 class Complaint(models.Model):
+    """
+    Complaint model: a model that contains a user complaint in a curtain date
+
+    fields:
+    (status): complaint status
+    complained_by: the user who submitted the complaint
+    date: the date where the complaint was submitted
+    description: what is the complaint contains
+    """
     COMPLAINT_STATUSES = (
         (ComplaintStatuses.pending, ugettext_noop("Pending")),
         (ComplaintStatuses.resolved, ugettext_noop("Resolved")),

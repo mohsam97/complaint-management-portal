@@ -2,19 +2,9 @@ from django.shortcuts import render
 from rest_framework import generics, viewsets, status
 from rest_framework.decorators import api_view
 
-from .models import User, Test
-from .serializers import UserSerializer, TestSerializer
+from .models import User
+from .serializers import UserSerializer
 from rest_framework.response import Response
-
-
-class UserListCreate(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class TestListCreate(generics.ListCreateAPIView):
-    queryset = Test.objects.all()
-    serializer_class = TestSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -24,6 +14,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def me(request):
+    """
+    returns the user that logged in
+    """
     if request.method == 'GET':
         if not request.user.is_anonymous:
             serializer = UserSerializer(request.user, many=False)
@@ -33,6 +26,9 @@ def me(request):
 
 @api_view(['POST'])
 def user_creation(request):
+    """
+    creates a new user
+    """
     if request.method == 'POST':
         user = User()
         serializer = UserSerializer(user, data=request.data)

@@ -6,6 +6,7 @@ import {Container, Grid, Paper, Typography} from "@material-ui/core";
 
 
 const SignIn = (props) => {
+    // Sign in page
         const {setIsAuthorized, setSignUp} = props
         const [username, setUsername] = useState("");
         const [password, setPassword] = useState("");

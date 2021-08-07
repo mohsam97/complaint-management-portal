@@ -21,6 +21,7 @@ import AddIcon from '@material-ui/icons/Add';
 import {format} from 'date-fns'
 
 const UserComplaints = (props) => {
+    // A page that display a table that contains a list complaints
     const {isAdmin, user} = props
     const [data, setData] = useState([]);
     const [create, setCreate] = useState(false);
@@ -85,6 +86,7 @@ const UserComplaints = (props) => {
         cookie.remove("token");
         location.reload();
     }
+
     return (
         <div style={{marginLeft: "15%", marginRight: "15%" , padding:5}}>
             <Grid container justifyContent={"space-between"} style={{marginBottom:10}}>

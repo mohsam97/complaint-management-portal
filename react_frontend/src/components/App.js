@@ -10,29 +10,10 @@ import DateFnsUtils from '@date-io/date-fns';
 
 
 const App = () => {
-    const [data, setData] = useState([]);
     const [isAuthorized, setIsAuthorized] = useState(null);
     const [user, setUser] = useState({});
     const [isAmin, setIsAdmin] = useState(null);
     const [signUp, setSignUp] = useState(false);
-    // useEffect(() => {
-    //     fetch("users/api", {
-    //         headers: {
-    //             "Authorization":
-    //                 "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjI4MjY0NzcxLCJqdGkiOiJlZTc5YWQ0YmU4NDU0ZWIxOTQ5N2I4OTM4ZTI5NDFjYiIsInVzZXJfaWQiOjJ9.xtCWwZO5mEmJQXS7nkdOGonnPyMJR-AdcUSJar7CcF4"
-    //         }
-    //     }).then(response => {
-    //         if (response.status > 400) {
-    //             return this.setState(() => {
-    //                 return {placeholder: "something went wrong!"};
-    //             });
-    //         }
-    //         return response.json()
-    //     }).then(data => {
-    //         setData(data)
-    //     });
-    //
-    // }, [])
 
     useEffect(() => {
         const token = cookie.get('token');
