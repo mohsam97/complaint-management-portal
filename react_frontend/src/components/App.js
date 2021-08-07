@@ -3,11 +3,16 @@ import ReactDOM from "react-dom";
 import SignIn from "./SignIn";
 import cookie from 'js-cookie';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import SignUp from "./SignUp";
+import UserComplaints from "./UserComplaints";
+import {MuiPickersUtilsProvider} from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns';
 
 
 const App = () => {
     const [data, setData] = useState([]);
     const [isAuthorized, setIsAuthorized] = useState(null);
+    const [signUp, setSignUp] = useState(false);
     // useEffect(() => {
     //     fetch("users/api", {
     //         headers: {
@@ -32,10 +37,10 @@ const App = () => {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({token:token})
+            body: JSON.stringify({token: token})
         };
         fetch("api/token/veirfy/", requestOptions).then(response => {
-            if (response.status<400)
+            if (response.status < 400)
                 setIsAuthorized(true)
             else
                 setIsAuthorized(false)
@@ -43,15 +48,16 @@ const App = () => {
 
     }, [])
 
-    return isAuthorized != null? isAuthorized?<p>qwe</p>:<SignIn setIsAuthorized={setIsAuthorized}/>:<CircularProgress/>
+    if (isAuthorized != null)
+        if (isAuthorized)
+            return <MuiPickersUtilsProvider utils={DateFnsUtils}><UserComplaints/></MuiPickersUtilsProvider>
+        else if (signUp)
+            return <SignUp setIsAuthorized={setIsAuthorized}/>
+        else
+            return <SignIn setIsAuthorized={setIsAuthorized} setSignUp={setSignUp}/>
+    else
+        return <CircularProgress/>
+
 };
 
-// SignIn.propTypes = {
-//     t: PropTypes.func,
-// };
-//
-// SignIn.getInitialProps = async () => ({
-//     t: () => {
-//     },
-// });
 ReactDOM.render(<App/>, document.getElementById('app'))

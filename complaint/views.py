@@ -22,8 +22,10 @@ def user_complaints(request):
 @api_view(['POST'])
 def complaint_creation(request):
     if request.method == 'POST':
+        print(request.user)
         if not request.user.is_anonymous:
             complaint = Complaint(complained_by=request.user)
+            request.data["complained_by"] = request.user.id
             serializer = ComplaintSerializer(complaint, data=request.data)
             if serializer.is_valid():
                 serializer.save()

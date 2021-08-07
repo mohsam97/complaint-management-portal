@@ -5,11 +5,11 @@ import cookie from 'js-cookie';
 
 
 const SignIn = (props) => {
-    const {setIsAuthorized} = props
+    const {setIsAuthorized, setSignUp} = props
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    function onClick() {
+    function onClickSignIn() {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -40,7 +40,8 @@ const SignIn = (props) => {
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
             />
-            <Button onClick={onClick}>Sign in</Button>
+            <Button onClick={onClickSignIn}>Sign in</Button>
+            <Button onClick={()=>setSignUp(true)}>Sign up</Button>
         </>
 
     );

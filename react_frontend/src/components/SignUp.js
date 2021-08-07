@@ -15,9 +15,9 @@ const SignUp = (props) => {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username: username, password: password})
+            body: JSON.stringify({username: username, password: password, firstName: firstName, lastName: lastName})
         };
-        fetch("api/token/", requestOptions).then(response => {
+        fetch("api/createuser", requestOptions).then(response => {
             if (response.status > 400) {
                 return this.setState(() => {
                     return {placeholder: "something went wrong!"};
